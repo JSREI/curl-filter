@@ -1,0 +1,289 @@
+/* CurlFilter 组件样式 */
+
+.curl-filter-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.curl-filter-paper {
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+/* 标题区域 */
+.header-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 8px;
+}
+
+.title-icon {
+  font-size: 2rem;
+}
+
+.subtitle {
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* 分割线 */
+.section-divider {
+  margin: 24px 0;
+}
+
+/* 输入区域 */
+.input-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.section-icon {
+  color: #1976d2;
+}
+
+.input-field {
+  margin-bottom: 16px;
+}
+
+.input-field .MuiOutlinedInput-root {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* 控制区域 */
+.controls-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.main-controls {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  text-transform: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover {
+  box-shadow: 0 6px 16px rgba(25, 118, 210, 0.4);
+  transform: translateY(-2px);
+}
+
+.clear-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  text-transform: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.button-icon {
+  font-size: 1.2rem;
+}
+
+.advanced-toggle {
+  margin: 0;
+}
+
+/* 高级选项区域 */
+.advanced-section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(25, 118, 210, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(25, 118, 210, 0.1);
+}
+
+.custom-headers-field {
+  margin-top: 8px;
+}
+
+/* 规则区域 */
+.rules-section {
+  margin-bottom: 24px;
+}
+
+.rules-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.rule-chip {
+  border-radius: 16px;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.rule-chip:hover {
+  background-color: rgba(25, 118, 210, 0.1);
+  border-color: #1976d2;
+}
+
+/* 输出区域 */
+.output-section {
+  margin-top: 24px;
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.copy-button {
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+  background-color: rgba(25, 118, 210, 0.1);
+  transform: scale(1.1);
+}
+
+.output-field {
+  margin-top: 8px;
+}
+
+.output-field .MuiOutlinedInput-root {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.output-field .MuiOutlinedInput-input {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .curl-filter-container {
+    padding: 16px;
+  }
+  
+  .curl-filter-paper {
+    padding: 20px;
+  }
+  
+  .controls-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .main-controls {
+    justify-content: center;
+  }
+  
+  .output-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .rules-chips {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .main-controls {
+    flex-direction: column;
+  }
+  
+  .filter-button,
+  .clear-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.curl-filter-paper {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* 滚动条样式 */
+.input-field textarea::-webkit-scrollbar,
+.output-field textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.input-field textarea::-webkit-scrollbar-track,
+.output-field textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.input-field textarea::-webkit-scrollbar-thumb,
+.output-field textarea::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.input-field textarea::-webkit-scrollbar-thumb:hover,
+.output-field textarea::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
