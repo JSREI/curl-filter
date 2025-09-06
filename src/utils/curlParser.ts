@@ -4,7 +4,10 @@ export interface ParsedCurl {
   url: string;
   method: string;
   headers: Record<string, string>;
-  data?: string;
+  queryParams: Record<string, string>;
+  formData: Record<string, string>;
+  jsonBody: any;
+  data?: string; // 原始数据，保持向后兼容
   otherOptions: string[];
 }
 
@@ -31,6 +34,53 @@ const CONTENT_HEADERS = [
 ];
 
 /**
+ * 解析URL中的查询参数
+ */
+function parseQueryParams(url: string): Record<string, string> {
+  const queryParams: Record<string, string> = {};
+  const urlObj = new URL(url);
+
+  urlObj.searchParams.forEach((value, key) => {
+    queryParams[key] = value;
+  });
+
+  return queryParams;
+}
+
+/**
+ * 解析表单数据
+ */
+function parseFormData(data: string): Record<string, string> {
+  const formData: Record<string, string> = {};
+
+  if (!data) return formData;
+
+  // 处理URL编码的表单数据
+  const pairs = data.split('&');
+  pairs.forEach(pair => {
+    const [key, value] = pair.split('=');
+    if (key) {
+      formData[decodeURIComponent(key)] = value ? decodeURIComponent(value) : '';
+    }
+  });
+
+  return formData;
+}
+
+/**
+ * 尝试解析JSON数据
+ */
+function parseJsonBody(data: string): any {
+  if (!data) return null;
+
+  try {
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * 解析curl命令
  */
 export function parseCurl(curlCommand: string): ParsedCurl {
@@ -38,6 +88,9 @@ export function parseCurl(curlCommand: string): ParsedCurl {
     url: '',
     method: 'GET',
     headers: {},
+    queryParams: {},
+    formData: {},
+    jsonBody: null,
     otherOptions: []
   };
 
@@ -131,7 +184,38 @@ export function parseCurl(curlCommand: string): ParsedCurl {
       result.url = token.replace(/^["']|["']$/g, '');
     }
   }
-  
+
+  // 解析URL中的查询参数
+  if (result.url) {
+    try {
+      result.queryParams = parseQueryParams(result.url);
+    } catch (e) {
+      // URL解析失败，忽略查询参数
+      result.queryParams = {};
+    }
+  }
+
+  // 解析请求体数据
+  if (result.data) {
+    // 检查Content-Type来决定如何解析数据
+    const contentType = result.headers['content-type'] || '';
+
+    if (contentType.includes('application/json')) {
+      result.jsonBody = parseJsonBody(result.data);
+    } else if (contentType.includes('application/x-www-form-urlencoded')) {
+      result.formData = parseFormData(result.data);
+    } else {
+      // 尝试自动检测数据格式
+      const jsonBody = parseJsonBody(result.data);
+      if (jsonBody !== null) {
+        result.jsonBody = jsonBody;
+      } else {
+        // 尝试解析为表单数据
+        result.formData = parseFormData(result.data);
+      }
+    }
+  }
+
   return result;
 }
 

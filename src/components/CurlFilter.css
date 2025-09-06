@@ -1,19 +1,21 @@
 /* CurlFilter 组件样式 */
 
 .curl-filter-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
+  width: 100%;
+  margin: 0;
+  padding: 16px;
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 .curl-filter-paper {
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.95);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* 标题区域 */
@@ -22,13 +24,29 @@
   margin-bottom: 24px;
 }
 
+.header-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.header-actions .MuiButton-root {
+  border-color: #666666;
+  color: #666666;
+}
+
+.header-actions .MuiButton-root:hover {
+  background-color: rgba(102, 102, 102, 0.04);
+}
+
 .title {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   font-weight: 600;
-  color: #1976d2;
+  color: #666666;
   margin-bottom: 8px;
 }
 
@@ -47,6 +65,19 @@
   margin: 24px 0;
 }
 
+/* 选项卡区域 */
+.tabs-section {
+  margin-bottom: 24px;
+}
+
+.tabs-section .MuiTabs-indicator {
+  background-color: #666666;
+}
+
+.tabs-section .MuiTab-root.Mui-selected {
+  color: #666666;
+}
+
 /* 输入区域 */
 .input-section {
   margin-bottom: 24px;
@@ -62,7 +93,7 @@
 }
 
 .section-icon {
-  color: #1976d2;
+  color: #666666;
 }
 
 .input-field {
@@ -99,12 +130,12 @@
   font-weight: 600;
   text-transform: none;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  box-shadow: 0 4px 12px rgba(102, 102, 102, 0.3);
   transition: all 0.3s ease;
 }
 
 .filter-button:hover {
-  box-shadow: 0 6px 16px rgba(25, 118, 210, 0.4);
+  box-shadow: 0 6px 16px rgba(102, 102, 102, 0.4);
   transform: translateY(-2px);
 }
 
@@ -131,9 +162,9 @@
 .advanced-section {
   margin-bottom: 24px;
   padding: 20px;
-  background: rgba(25, 118, 210, 0.05);
+  background: rgba(102, 102, 102, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(25, 118, 210, 0.1);
+  border: 1px solid rgba(102, 102, 102, 0.1);
 }
 
 .custom-headers-field {
@@ -159,8 +190,8 @@
 }
 
 .rule-chip:hover {
-  background-color: rgba(25, 118, 210, 0.1);
-  border-color: #1976d2;
+  background-color: rgba(102, 102, 102, 0.1);
+  border-color: #666666;
 }
 
 /* 输出区域 */
@@ -182,7 +213,7 @@
 }
 
 .copy-button:hover {
-  background-color: rgba(25, 118, 210, 0.1);
+  background-color: rgba(102, 102, 102, 0.1);
   transform: scale(1.1);
 }
 
@@ -286,4 +317,67 @@
 .input-field textarea::-webkit-scrollbar-thumb:hover,
 .output-field textarea::-webkit-scrollbar-thumb:hover {
   background: #a1a1a1;
+}
+
+/* 规则状态区域 */
+.rules-status-section {
+  padding: 16px;
+}
+
+.rules-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.rule-chip {
+  margin: 2px;
+}
+
+.rules-summary {
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+/* 过滤摘要 */
+.filter-summary {
+  padding: 12px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  border-left: 4px solid #666666;
+}
+
+/* 预览组件样式 */
+.rule-preview {
+  padding: 16px;
+}
+
+.rule-preview .MuiPaper-root {
+  padding: 16px;
+  border-radius: 8px;
+}
+
+/* 响应式设计增强 */
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .header-actions .MuiButton-root {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .curl-filter-container {
+    padding: 16px;
+  }
+
+  .curl-filter-paper {
+    padding: 16px;
+  }
 }

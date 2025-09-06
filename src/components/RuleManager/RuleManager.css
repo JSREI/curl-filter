@@ -1,0 +1,301 @@
+/* 规则管理器样式 */
+
+.rule-manager {
+  width: 100%;
+  margin: 0;
+}
+
+.rule-manager-paper {
+  padding: 0;
+  border-radius: 12px !important;
+}
+
+.rule-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #666666 0%, #444444 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.rule-manager-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: white !important;
+}
+
+.title-icon {
+  font-size: 28px !important;
+}
+
+.rule-manager-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rule-manager-actions .MuiIconButton-root {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s;
+}
+
+.rule-manager-actions .MuiIconButton-root:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.rule-manager-actions .MuiButton-root {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.rule-manager-actions .MuiButton-contained {
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.rule-manager-actions .MuiButton-contained:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.rule-manager-content {
+  padding: 0;
+}
+
+.rule-manager-content .MuiTabs-root {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 24px;
+}
+
+.rule-manager-content .MuiTabPanel-root {
+  padding: 24px !important;
+}
+
+/* 规则列表样式 */
+.rule-list {
+  width: 100%;
+}
+
+.rule-list-empty {
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.rule-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 规则编辑器样式 */
+.rule-editor {
+  width: 100%;
+}
+
+.rule-editor-actions {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 16px;
+  margin-top: 24px;
+}
+
+/* 模板选择器样式 */
+.template-selector {
+  width: 100%;
+}
+
+/* 规则统计样式 */
+.rule-stats {
+  padding: 24px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.rule-stats .MuiTypography-root {
+  margin-bottom: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .rule-manager-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .rule-manager-actions {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .rule-manager-title {
+    font-size: 1.5rem;
+  }
+
+  .rule-list .MuiTableContainer-root {
+    overflow-x: auto;
+  }
+
+  .rule-editor {
+    max-width: 100%;
+  }
+
+  .template-selector {
+    max-width: 100%;
+  }
+}
+
+/* 优先级颜色指示器 */
+.priority-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.priority-high {
+  background-color: #f44336;
+}
+
+.priority-medium-high {
+  background-color: #ff9800;
+}
+
+.priority-medium {
+  background-color: #666666;
+}
+
+.priority-low {
+  background-color: #4caf50;
+}
+
+/* 规则状态指示器 */
+.rule-status-enabled {
+  color: #4caf50;
+}
+
+.rule-status-disabled {
+  color: #9e9e9e;
+}
+
+/* 动画效果 */
+.rule-item-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.rule-item-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.rule-item-exit {
+  opacity: 1;
+}
+
+.rule-item-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* 拖拽样式 */
+.rule-drag-handle {
+  cursor: grab;
+  color: #9e9e9e;
+  transition: color 0.2s;
+}
+
+.rule-drag-handle:hover {
+  color: #666;
+}
+
+.rule-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* 表格样式优化 */
+.MuiTableRow-root:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.MuiTableCell-root {
+  border-bottom: 1px solid rgba(224, 224, 224, 0.5) !important;
+}
+
+/* 芯片样式优化 */
+.MuiChip-root {
+  font-weight: 500;
+}
+
+/* 对话框样式 */
+.MuiDialog-paper {
+  border-radius: 12px !important;
+}
+
+.MuiDialogTitle-root {
+  background: linear-gradient(135deg, #666666 0%, #444444 100%);
+  color: white;
+  padding: 20px 24px;
+}
+
+.MuiDialogContent-root {
+  padding: 24px !important;
+}
+
+.MuiDialogActions-root {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* 滑块样式 */
+.MuiSlider-root {
+  color: #666666;
+}
+
+.MuiSlider-thumb {
+  background-color: #666666;
+}
+
+.MuiSlider-track {
+  background-color: #666666;
+}
+
+.MuiSlider-rail {
+  background-color: rgba(102, 102, 102, 0.2);
+}
+
+/* 选项卡样式 */
+.MuiTabs-indicator {
+  background-color: #666666;
+}
+
+.MuiTab-root.Mui-selected {
+  color: #666666;
+}
+
+/* 表单控件样式 */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #666666;
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: #666666;
+}
+
+/* 按钮样式 */
+.MuiButton-contained {
+  background: linear-gradient(135deg, #666666 0%, #444444 100%);
+  box-shadow: 0 4px 15px 0 rgba(102, 102, 102, 0.3);
+}
+
+.MuiButton-contained:hover {
+  background: linear-gradient(135deg, #555555 0%, #333333 100%);
+  box-shadow: 0 6px 20px 0 rgba(102, 102, 102, 0.4);
+}
