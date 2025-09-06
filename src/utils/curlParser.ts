@@ -1,4 +1,4 @@
-// curl命令解析和过滤工具
+// cURL命令解析和过滤工具
 
 export interface ParsedCurl {
   url: string;
@@ -81,7 +81,7 @@ function parseJsonBody(data: string): any {
 }
 
 /**
- * 解析curl命令
+ * 解析cURL命令
  */
 export function parseCurl(curlCommand: string): ParsedCurl {
   const result: ParsedCurl = {
@@ -237,7 +237,7 @@ export function filterHeaders(headers: Record<string, string>, customKeepHeaders
 }
 
 /**
- * 重新构建curl命令
+ * 重新构建cURL命令
  */
 export function buildCurl(parsed: ParsedCurl, filteredHeaders: Record<string, string>): string {
   let command = 'curl';

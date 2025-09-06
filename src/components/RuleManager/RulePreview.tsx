@@ -41,14 +41,14 @@ const RulePreview: React.FC<RulePreviewProps> = ({
   useEffect(() => {
     try {
       if (!curlCommand.trim()) {
-        setError('请输入curl命令');
+        setError('请输入cURL命令');
         return;
       }
 
       const parsed = parseCurl(curlCommand);
       
       if (!parsed.url) {
-        setError('无法解析URL，请检查curl命令格式');
+        setError('无法解析URL，请检查cURL命令格式');
         return;
       }
 
@@ -69,7 +69,7 @@ const RulePreview: React.FC<RulePreviewProps> = ({
       setFilterResult(result);
       setError('');
     } catch (err) {
-      setError('解析curl命令时出错: ' + (err as Error).message);
+      setError('解析cURL命令时出错: ' + (err as Error).message);
     }
   }, [curlCommand, rules]);
 
@@ -254,7 +254,7 @@ const RulePreview: React.FC<RulePreviewProps> = ({
   if (!originalContext || !filterResult) {
     return (
       <Typography variant="body2" color="text.secondary">
-        正在解析curl命令...
+        正在解析cURL命令...
       </Typography>
     );
   }

@@ -23,14 +23,17 @@ import {
   FilterList,
   Info,
   Settings as SettingsIcon,
-  Preview as PreviewIcon
+  Preview as PreviewIcon,
+  History as HistoryIcon
 } from '@mui/icons-material';
 import { parseCurl } from '../utils/curlParser';
 import { FilterEngine } from '../utils/filterEngine';
 import type { FilterRule, FilterContext, FilterResult } from '../types/filterRules';
 import { loadRules } from '../utils/ruleStorage';
+import { saveHistoryEntry } from '../utils/indexedDBStorage';
 import RuleManager from './RuleManager/RuleManager';
 import RulePreview from './RuleManager/RulePreview';
+import HistoryManager from './HistoryManager/HistoryManager';
 import './CurlFilter.css';
 
 interface TabPanelProps {
@@ -63,6 +66,7 @@ const CurlFilter: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
   const [isRuleManagerOpen, setIsRuleManagerOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isHistoryManagerOpen, setIsHistoryManagerOpen] = useState(false);
 
   // 过滤相关状态
   const [rules, setRules] = useState<FilterRule[]>([]);
@@ -73,9 +77,9 @@ const CurlFilter: React.FC = () => {
   const debounceTimerRef = useRef<number | null>(null);
 
   // 加载规则
-  const loadFilterRules = useCallback(() => {
+  const loadFilterRules = useCallback(async () => {
     try {
-      const loadedRules = loadRules();
+      const loadedRules = await loadRules();
       setRules(loadedRules);
       filterEngine.setRules(loadedRules);
     } catch (err) {
@@ -88,19 +92,19 @@ const CurlFilter: React.FC = () => {
     loadFilterRules();
   }, [loadFilterRules]);
 
-  const handleFilter = useCallback((curlText?: string) => {
+  const handleFilter = useCallback(async (curlText?: string) => {
     try {
       const textToProcess = curlText || inputCurl;
 
       if (!textToProcess.trim()) {
-        setError('请输入curl命令');
+        setError('请输入cURL命令');
         return;
       }
 
       const parsed = parseCurl(textToProcess);
 
       if (!parsed.url) {
-        setError('无法解析URL，请检查curl命令格式');
+        setError('无法解析URL，请检查cURL命令格式');
         return;
       }
 
@@ -118,7 +122,7 @@ const CurlFilter: React.FC = () => {
       const result = filterEngine.applyFilters(context);
       setFilterResult(result);
 
-      // 重新构建curl命令
+      // 重新构建cURL命令
       const filteredParsed = {
         ...parsed,
         headers: result.headers,
@@ -130,13 +134,25 @@ const CurlFilter: React.FC = () => {
       const newCurl = buildCurlFromContext(filteredParsed);
       setOutputCurl(newCurl);
       setError('');
-      setSuccess(`curl命令过滤完成，应用了 ${result.appliedRules.length} 个规则`);
+      setSuccess(`cURL命令过滤完成，应用了 ${result.appliedRules.length} 个规则`);
+
+      // 保存到历史记录
+      try {
+        await saveHistoryEntry(
+          textToProcess,
+          newCurl,
+          result.appliedRules,
+          result
+        );
+      } catch (historyError) {
+        console.warn('保存历史记录失败:', historyError);
+      }
 
       if (result.warnings.length > 0) {
         console.warn('过滤警告:', result.warnings);
       }
     } catch (err) {
-      setError('解析curl命令时出错: ' + (err as Error).message);
+      setError('解析cURL命令时出错: ' + (err as Error).message);
     }
   }, [inputCurl, filterEngine]);
 
@@ -148,12 +164,12 @@ const CurlFilter: React.FC = () => {
     }
 
     // 设置新的防抖定时器
-    debounceTimerRef.current = window.setTimeout(() => {
-      // 检查是否有有效的curl命令和启用的规则
-      if (curlText.trim() && rules.filter(r => r.enabled).length > 0) {
-        // 检查是否看起来像curl命令
+    debounceTimerRef.current = window.setTimeout(async () => {
+      // 检查是否有有效的cURL命令和启用的规则
+      if (curlText.trim() && rules && Array.isArray(rules) && rules.filter(r => r.enabled).length > 0) {
+        // 检查是否看起来像cURL命令
         if (curlText.trim().toLowerCase().startsWith('curl')) {
-          handleFilter(curlText);
+          await handleFilter(curlText);
         }
       }
     }, 800); // 800ms防抖延迟
@@ -169,17 +185,17 @@ const CurlFilter: React.FC = () => {
   }, []);
 
   // 处理规则变更
-  const handleRulesChange = useCallback((newRules: FilterRule[]) => {
+  const handleRulesChange = useCallback(async (newRules: FilterRule[]) => {
     setRules(newRules);
     filterEngine.setRules(newRules);
     // 如果有输入内容，自动重新过滤
     if (inputCurl.trim()) {
       // 直接调用handleFilter而不是autoFilter，避免循环依赖
-      handleFilter(inputCurl);
+      await handleFilter(inputCurl);
     }
   }, [filterEngine, inputCurl, handleFilter]);
 
-  // 从过滤上下文构建curl命令
+  // 从过滤上下文构建cURL命令
   const buildCurlFromContext = (parsed: any): string => {
     let command = 'curl';
 
@@ -272,10 +288,10 @@ const CurlFilter: React.FC = () => {
         <Box className="header-section">
           <Typography variant="h4" component="h1" className="title">
             <FilterList className="title-icon" />
-            Curl 过滤器
+            cURL 过滤器
           </Typography>
           <Typography variant="body1" color="text.secondary" className="subtitle">
-            使用可配置的规则过滤curl命令，支持请求头、查询参数、表单数据和JSON请求体
+            使用可配置的规则过滤cURL命令，支持请求头、查询参数、表单数据和JSON请求体
           </Typography>
 
           <Box className="header-actions">
@@ -296,6 +312,14 @@ const CurlFilter: React.FC = () => {
             >
               预览效果
             </Button>
+            <Button
+              variant="outlined"
+              startIcon={<HistoryIcon />}
+              onClick={() => setIsHistoryManagerOpen(true)}
+              size="small"
+            >
+              历史记录
+            </Button>
           </Box>
         </Box>
 
@@ -304,7 +328,7 @@ const CurlFilter: React.FC = () => {
         <Box className="tabs-section">
           <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
             <Tab label="过滤工具" />
-            <Tab label={`规则状态 (${rules.filter(r => r.enabled).length}/${rules.length})`} />
+            <Tab label={`规则状态 (${rules && Array.isArray(rules) ? rules.filter(r => r.enabled).length : 0}/${rules && Array.isArray(rules) ? rules.length : 0})`} />
           </Tabs>
         </Box>
 
@@ -318,7 +342,7 @@ const CurlFilter: React.FC = () => {
               rows={6}
               fullWidth
               variant="outlined"
-              placeholder="粘贴你的 curl 命令到这里..."
+              placeholder="粘贴你的 cURL 命令到这里..."
               value={inputCurl}
               onChange={(e) => handleInputChange(e.target.value)}
               className="input-field"
@@ -331,7 +355,7 @@ const CurlFilter: React.FC = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => handleFilter()}
-                disabled={!inputCurl.trim() || rules.filter(r => r.enabled).length === 0}
+                disabled={!inputCurl.trim() || !rules || !Array.isArray(rules) || rules.filter(r => r.enabled).length === 0}
                 className="filter-button"
               >
                 <FilterList className="button-icon" />
@@ -347,7 +371,7 @@ const CurlFilter: React.FC = () => {
               </Button>
             </Box>
 
-            {rules.filter(r => r.enabled).length === 0 && (
+            {(!rules || !Array.isArray(rules) || rules.filter(r => r.enabled).length === 0) && (
               <Alert severity="warning" sx={{ mt: 2 }}>
                 没有启用的过滤规则，请先在规则管理中配置规则
               </Alert>
@@ -404,7 +428,7 @@ const CurlFilter: React.FC = () => {
               当前规则状态
             </Typography>
 
-            {rules.length === 0 ? (
+            {!rules || !Array.isArray(rules) || rules.length === 0 ? (
               <Alert severity="info">
                 暂无配置规则，请点击"规则管理"添加过滤规则
               </Alert>
@@ -425,9 +449,9 @@ const CurlFilter: React.FC = () => {
 
             <Box className="rules-summary" sx={{ mt: 2 }}>
               <Typography variant="body2" color="text.secondary">
-                总规则数: {rules.length} |
-                启用: {rules.filter(r => r.enabled).length} |
-                禁用: {rules.filter(r => !r.enabled).length}
+                总规则数: {rules && Array.isArray(rules) ? rules.length : 0} |
+                启用: {rules && Array.isArray(rules) ? rules.filter(r => r.enabled).length : 0} |
+                禁用: {rules && Array.isArray(rules) ? rules.filter(r => !r.enabled).length : 0}
               </Typography>
             </Box>
           </Box>
@@ -463,9 +487,31 @@ const CurlFilter: React.FC = () => {
           {inputCurl && (
             <RulePreview
               curlCommand={inputCurl}
-              rules={rules.filter(r => r.enabled)}
+              rules={rules && Array.isArray(rules) ? rules.filter(r => r.enabled) : []}
             />
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* 历史记录管理对话框 */}
+      <Dialog
+        open={isHistoryManagerOpen}
+        onClose={() => setIsHistoryManagerOpen(false)}
+        maxWidth="xl"
+        fullWidth
+        PaperProps={{
+          sx: { height: '90vh' }
+        }}
+      >
+        <DialogTitle>历史记录管理</DialogTitle>
+        <DialogContent sx={{ p: 0 }}>
+          <HistoryManager
+            onSelectEntry={(entry) => {
+              setInputCurl(entry.inputCurl);
+              setIsHistoryManagerOpen(false);
+              setSuccess('已从历史记录加载cURL命令');
+            }}
+          />
         </DialogContent>
       </Dialog>
 

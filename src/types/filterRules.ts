@@ -218,3 +218,48 @@ export interface ImportedConfig {
   rules: ExportedRule[];
   settings?: Partial<StoredConfig['settings']>;
 }
+
+/**
+ * 历史记录条目
+ */
+export interface HistoryEntry {
+  id: string;                    // 唯一标识
+  inputCurl: string;             // 用户输入的cURL命令
+  outputCurl: string;            // 过滤后的cURL命令
+  appliedRules: string[];        // 应用的规则ID列表
+  filterResult: FilterResult;    // 完整的过滤结果
+  timestamp: string;             // 创建时间
+  title?: string;                // 用户自定义标题
+  tags?: string[];               // 标签
+  favorite: boolean;             // 是否收藏
+}
+
+/**
+ * 历史记录查询选项
+ */
+export interface HistoryQueryOptions {
+  limit?: number;                // 限制返回数量
+  offset?: number;               // 偏移量
+  sortBy?: 'timestamp' | 'title'; // 排序字段
+  sortOrder?: 'asc' | 'desc';    // 排序方向
+  searchText?: string;           // 搜索文本
+  tags?: string[];               // 标签过滤
+  favoriteOnly?: boolean;        // 仅显示收藏
+  dateRange?: {                  // 日期范围
+    start: string;
+    end: string;
+  };
+}
+
+/**
+ * 历史记录统计信息
+ */
+export interface HistoryStats {
+  totalEntries: number;          // 总条目数
+  favoriteEntries: number;       // 收藏条目数
+  tagsCount: Record<string, number>; // 标签统计
+  dateRange: {                   // 日期范围
+    earliest: string;
+    latest: string;
+  };
+}

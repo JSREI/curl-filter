@@ -77,9 +77,9 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
   });
 
   // 加载规则
-  const loadRulesFromStorage = useCallback(() => {
+  const loadRulesFromStorage = useCallback(async () => {
     try {
-      const loadedRules = loadRules();
+      const loadedRules = await loadRules();
       setRules(loadedRules);
       onRulesChange?.(loadedRules);
     } catch (error) {
@@ -88,9 +88,9 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
   }, [onRulesChange]);
 
   // 保存规则
-  const saveRulesToStorage = useCallback((newRules: FilterRule[]) => {
+  const saveRulesToStorage = useCallback(async (newRules: FilterRule[]) => {
     try {
-      const success = saveRules(newRules);
+      const success = await saveRules(newRules);
       if (success) {
         setRules(newRules);
         onRulesChange?.(newRules);
@@ -185,25 +185,25 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
   };
 
   // 导出配置
-  const handleExport = () => {
+  const handleExport = async () => {
     try {
-      const config = storageManager.loadConfig();
+      const config = await storageManager.loadConfig();
       if (!config) {
         showNotification('没有可导出的配置', 'warning');
         return;
       }
 
-      const exportData = storageManager.exportConfig(config);
+      const exportData = await storageManager.exportConfig();
       const blob = new Blob([exportData], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `curl-filter-rules-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `cURL-filter-rules-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       showNotification('配置导出成功', 'success');
     } catch (error) {
       showNotification('配置导出失败', 'error');
@@ -220,15 +220,15 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         try {
           const content = e.target?.result as string;
-          const result = storageManager.importConfig(content);
-          
+          const result = await storageManager.importConfig(content);
+
           if (result.success && result.config) {
-            const success = storageManager.saveConfig(result.config);
+            const success = await storageManager.saveConfig(result.config);
             if (success) {
-              loadRulesFromStorage();
+              await loadRulesFromStorage();
               showNotification('配置导入成功', 'success');
             } else {
               showNotification('配置保存失败', 'error');
