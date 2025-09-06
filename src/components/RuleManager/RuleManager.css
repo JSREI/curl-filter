@@ -15,7 +15,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px;
-  background: linear-gradient(135deg, #666666 0%, #444444 100%);
+  background: linear-gradient(135deg, #00a86b 0%, #4caf50 100%);
   color: white;
   border-radius: 12px 12px 0 0;
 }
@@ -167,7 +167,7 @@
 }
 
 .priority-medium {
-  background-color: #666666;
+  background-color: #00a86b;
 }
 
 .priority-low {
@@ -240,7 +240,7 @@
 }
 
 .MuiDialogTitle-root {
-  background: linear-gradient(135deg, #666666 0%, #444444 100%);
+  background: linear-gradient(135deg, #00a86b 0%, #4caf50 100%);
   color: white;
   padding: 20px 24px;
 }
@@ -256,46 +256,46 @@
 
 /* 滑块样式 */
 .MuiSlider-root {
-  color: #666666;
+  color: #00a86b;
 }
 
 .MuiSlider-thumb {
-  background-color: #666666;
+  background-color: #00a86b;
 }
 
 .MuiSlider-track {
-  background-color: #666666;
+  background-color: #00a86b;
 }
 
 .MuiSlider-rail {
-  background-color: rgba(102, 102, 102, 0.2);
+  background-color: rgba(0, 168, 107, 0.2);
 }
 
 /* 选项卡样式 */
 .MuiTabs-indicator {
-  background-color: #666666;
+  background-color: #00a86b;
 }
 
 .MuiTab-root.Mui-selected {
-  color: #666666;
+  color: #00a86b;
 }
 
 /* 表单控件样式 */
 .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #666666;
+  border-color: #00a86b;
 }
 
 .MuiInputLabel-root.Mui-focused {
-  color: #666666;
+  color: #00a86b;
 }
 
 /* 按钮样式 */
 .MuiButton-contained {
-  background: linear-gradient(135deg, #666666 0%, #444444 100%);
-  box-shadow: 0 4px 15px 0 rgba(102, 102, 102, 0.3);
+  background: linear-gradient(135deg, #00a86b 0%, #4caf50 100%);
+  box-shadow: 0 4px 15px 0 rgba(0, 168, 107, 0.3);
 }
 
 .MuiButton-contained:hover {
-  background: linear-gradient(135deg, #555555 0%, #333333 100%);
-  box-shadow: 0 6px 20px 0 rgba(102, 102, 102, 0.4);
+  background: linear-gradient(135deg, #008f5a 0%, #45a049 100%);
+  box-shadow: 0 6px 20px 0 rgba(0, 168, 107, 0.4);
 }

@@ -32,12 +32,12 @@
 }
 
 .header-actions .MuiButton-root {
-  border-color: #666666;
-  color: #666666;
+  border-color: #00a86b;
+  color: #00a86b;
 }
 
 .header-actions .MuiButton-root:hover {
-  background-color: rgba(102, 102, 102, 0.04);
+  background-color: rgba(0, 168, 107, 0.04);
 }
 
 .title {
@@ -46,7 +46,7 @@
   justify-content: center;
   gap: 12px;
   font-weight: 600;
-  color: #666666;
+  color: #00a86b;
   margin-bottom: 8px;
 }
 
@@ -71,11 +71,11 @@
 }
 
 .tabs-section .MuiTabs-indicator {
-  background-color: #666666;
+  background-color: #00a86b;
 }
 
 .tabs-section .MuiTab-root.Mui-selected {
-  color: #666666;
+  color: #00a86b;
 }
 
 /* 输入区域 */
@@ -93,7 +93,7 @@
 }
 
 .section-icon {
-  color: #666666;
+  color: #00a86b;
 }
 
 .input-field {
@@ -130,12 +130,12 @@
   font-weight: 600;
   text-transform: none;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(102, 102, 102, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
   transition: all 0.3s ease;
 }
 
 .filter-button:hover {
-  box-shadow: 0 6px 16px rgba(102, 102, 102, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 168, 107, 0.4);
   transform: translateY(-2px);
 }
 
@@ -162,9 +162,9 @@
 .advanced-section {
   margin-bottom: 24px;
   padding: 20px;
-  background: rgba(102, 102, 102, 0.05);
+  background: rgba(0, 168, 107, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(102, 102, 102, 0.1);
+  border: 1px solid rgba(0, 168, 107, 0.1);
 }
 
 .custom-headers-field {
@@ -190,8 +190,8 @@
 }
 
 .rule-chip:hover {
-  background-color: rgba(102, 102, 102, 0.1);
-  border-color: #666666;
+  background-color: rgba(0, 168, 107, 0.1);
+  border-color: #00a86b;
 }
 
 /* 输出区域 */
@@ -213,7 +213,7 @@
 }
 
 .copy-button:hover {
-  background-color: rgba(102, 102, 102, 0.1);
+  background-color: rgba(0, 168, 107, 0.1);
   transform: scale(1.1);
 }
 
@@ -347,7 +347,7 @@
   padding: 12px;
   background-color: #e3f2fd;
   border-radius: 8px;
-  border-left: 4px solid #666666;
+  border-left: 4px solid #00a86b;
 }
 
 /* 预览组件样式 */
