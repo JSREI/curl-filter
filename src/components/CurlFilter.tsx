@@ -272,7 +272,7 @@ const CurlFilter: React.FC = () => {
         <Box className="header-section">
           <Typography variant="h4" component="h1" className="title">
             <FilterList className="title-icon" />
-            Curl 智能过滤器
+            Curl 过滤器
           </Typography>
           <Typography variant="body1" color="text.secondary" className="subtitle">
             使用可配置的规则过滤curl命令，支持请求头、查询参数、表单数据和JSON请求体
