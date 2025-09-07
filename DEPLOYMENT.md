@@ -72,3 +72,21 @@ npm run preview
 - 确保所有代码更改都推送到 `main` 分支
 - 构建过程中的任何 TypeScript 错误都会导致部署失败
 - 首次部署可能需要几分钟时间生效
+- 如果GitHub Actions没有触发，请检查仓库的Actions设置是否启用
+
+## 故障排除步骤
+
+如果GitHub Actions没有自动触发：
+
+1. **检查Actions权限**：
+   - 进入仓库 Settings → Actions → General
+   - 确保 "Allow all actions and reusable workflows" 已启用
+
+2. **检查Pages设置**：
+   - 进入仓库 Settings → Pages
+   - Source 必须设置为 "GitHub Actions"
+
+3. **手动触发**：
+   - 进入仓库的 Actions 页面
+   - 选择 "部署到 GitHub Pages" 工作流
+   - 点击 "Run workflow" 手动触发
