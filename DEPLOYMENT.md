@@ -26,7 +26,7 @@
 
 `vite.config.ts` 已配置为适配 GitHub Pages：
 
-- **base 路径**：设置为 `/coze-plugin-curl-filter/` 以匹配仓库名
+- **base 路径**：设置为 `/curl-filter/` 以匹配实际部署路径
 - **构建输出**：输出到 `dist` 目录
 - **源映射**：启用源映射文件用于调试
 
@@ -44,7 +44,7 @@
 1. 将代码推送到 `main` 分支
 2. GitHub Actions 自动触发构建
 3. 构建成功后自动部署到 GitHub Pages
-4. 网站将在 `https://open-api-hub.github.io/coze-plugin-curl-filter/` 可访问
+4. 网站将在 `https://jsrei.github.io/curl-filter/` 可访问
 
 ### 5. 本地测试
 

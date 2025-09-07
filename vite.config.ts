@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // 设置基础路径为仓库名，适配GitHub Pages
-  base: '/coze-plugin-curl-filter/',
+  // 设置基础路径为实际部署路径，适配GitHub Pages
+  base: '/curl-filter/',
   server: {
     port: 25519,
     host: true
