@@ -26,6 +26,7 @@ import {
   Preview as PreviewIcon,
   History as HistoryIcon
 } from '@mui/icons-material';
+import GitHubIcon from './GitHubIcon';
 import { parseCurl } from '../utils/curlParser';
 import { FilterEngine } from '../utils/filterEngine';
 import type { FilterRule, FilterContext, FilterResult } from '../types/filterRules';
@@ -286,13 +287,27 @@ const CurlFilter: React.FC = () => {
     <Box className="curl-filter-container">
       <Paper elevation={3} className="curl-filter-paper">
         <Box className="header-section">
-          <Typography variant="h4" component="h1" className="title">
-            <FilterList className="title-icon" />
-            cURL 过滤器
-          </Typography>
-          <Typography variant="body1" color="text.secondary" className="subtitle">
-            使用可配置的规则过滤cURL命令，支持请求头、查询参数、表单数据和JSON请求体
-          </Typography>
+          <Box className="header-content">
+            <Box className="header-text">
+              <Typography variant="h4" component="h1" className="title">
+                <FilterList className="title-icon" />
+                cURL 过滤器
+              </Typography>
+              <Typography variant="body1" color="text.secondary" className="subtitle">
+                使用可配置的规则过滤cURL命令，支持请求头、查询参数、表单数据和JSON请求体
+              </Typography>
+            </Box>
+            <Tooltip title="查看源代码">
+              <IconButton
+                onClick={() => window.open('https://github.com/JSREI/curl-filter', '_blank')}
+                color="primary"
+                className="github-button"
+                size="large"
+              >
+                <GitHubIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
 
           <Box className="header-actions">
             <Button
