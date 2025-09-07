@@ -294,7 +294,7 @@ const CurlFilter: React.FC = () => {
                 cURL 过滤器
               </Typography>
               <Typography variant="body1" color="text.secondary" className="subtitle">
-                使用可配置的规则过滤cURL命令，支持请求头、查询参数、表单数据和JSON请求体
+                清理Chrome复制的cURL命令中的冗余请求头和参数，便于导入Postman、Apifox、Coze插件等外部系统
               </Typography>
             </Box>
             <Tooltip title="查看源代码">
