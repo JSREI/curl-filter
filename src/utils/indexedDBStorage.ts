@@ -192,7 +192,7 @@ export class IndexedDBStorageManager {
           request.onsuccess = () => {
             const result = request.result;
             if (result) {
-              const { key, ...config } = result;
+              const { key: _, ...config } = result;
               resolve(config as StoredConfig);
             } else {
               resolve(null);
@@ -328,7 +328,7 @@ export class IndexedDBStorageManager {
   /**
    * 配置迁移
    */
-  private migrateConfig(_oldConfig: any): StoredConfig {
+  private migrateConfig(_: unknown): StoredConfig {
     // 这里可以实现版本迁移逻辑
     // 目前只是创建新的默认配置
     console.warn('配置版本不匹配，创建新的默认配置');
@@ -548,7 +548,9 @@ export class IndexedDBStorageManager {
 
             // 排序
             results.sort((a: HistoryEntry, b: HistoryEntry) => {
-              let aValue: any, bValue: any;
+              let aValue: number | string = 0;
+              let bValue: number | string = 0;
+
               if (sortBy === 'timestamp') {
                 aValue = new Date(a.timestamp).getTime();
                 bValue = new Date(b.timestamp).getTime();

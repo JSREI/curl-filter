@@ -95,7 +95,7 @@ export function parseCurl(curlCommand: string): ParsedCurl {
   };
 
   // 移除多余的空格和换行符，处理反斜杠换行
-  let cleanCommand = curlCommand.replace(/\\\s*\n/g, ' ').replace(/\s+/g, ' ').trim();
+  const cleanCommand = curlCommand.replace(/\\\s*\n/g, ' ').replace(/\s+/g, ' ').trim();
   
   // 使用正则表达式来正确解析带引号的参数
   const tokens = [];
@@ -189,8 +189,9 @@ export function parseCurl(curlCommand: string): ParsedCurl {
   if (result.url) {
     try {
       result.queryParams = parseQueryParams(result.url);
-    } catch (e) {
+    } catch (error) {
       // URL解析失败，忽略查询参数
+      console.warn('URL解析失败:', error);
       result.queryParams = {};
     }
   }

@@ -23,6 +23,15 @@ const LanguageSwitcher: React.FC = () => {
     { code: 'en', name: 'English', flag: '🇺🇸' }
   ];
 
+  // 标准化语言代码
+  const normalizeLanguageCode = (lang: string) => {
+    if (lang.startsWith('zh')) return 'zh';
+    if (lang.startsWith('en')) return 'en';
+    return lang;
+  };
+
+  const currentLanguage = normalizeLanguageCode(i18n.language);
+
 
 
   return (
@@ -30,7 +39,7 @@ const LanguageSwitcher: React.FC = () => {
       <LanguageIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
       <FormControl size="small" sx={{ minWidth: 120 }}>
         <Select
-          value={i18n.language}
+          value={currentLanguage}
           onChange={handleLanguageChange}
           variant="outlined"
           sx={{

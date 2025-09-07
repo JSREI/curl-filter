@@ -85,6 +85,7 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
       setRules(loadedRules);
       onRulesChange?.(loadedRules);
     } catch (error) {
+      console.error('加载规则失败:', error);
       showNotification(t('messages.loadFailed'), 'error');
     }
   }, [onRulesChange, t]);
@@ -101,6 +102,7 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
         showNotification(t('messages.saveFailed'), 'error');
       }
     } catch (error) {
+      console.error('保存规则失败:', error);
       showNotification(t('messages.saveFailed'), 'error');
     }
   }, [onRulesChange, t]);
@@ -208,6 +210,7 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
 
       showNotification('配置导出成功', 'success');
     } catch (error) {
+      console.error('配置导出失败:', error);
       showNotification('配置导出失败', 'error');
     }
   };
@@ -239,6 +242,7 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
             showNotification(result.error || t('messages.configImportFailed'), 'error');
           }
         } catch (error) {
+          console.error('文件读取失败:', error);
           showNotification(t('messages.fileReadFailed'), 'error');
         }
       };

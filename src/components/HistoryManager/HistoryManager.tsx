@@ -171,7 +171,8 @@ const HistoryManager: React.FC<HistoryManagerProps> = ({ onSelectEntry }) => {
     try {
       await navigator.clipboard.writeText(text);
       setSuccess(`${type}已复制到剪贴板`);
-    } catch (err) {
+    } catch (error) {
+      console.error('复制失败:', error);
       setError('复制失败');
     }
   }, []);

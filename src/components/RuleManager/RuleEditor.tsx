@@ -49,7 +49,7 @@ const RuleEditor: React.FC<RuleEditorProps> = ({
     setValidation(newValidation);
   }, [editedRule]);
 
-  const handleFieldChange = (field: keyof FilterRule, value: any) => {
+  const handleFieldChange = (field: keyof FilterRule, value: string | number | boolean) => {
     setEditedRule(prev => ({
       ...prev,
       [field]: value

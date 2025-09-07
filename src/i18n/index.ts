@@ -11,6 +11,12 @@ const resources = {
   },
   zh: {
     translation: zhTranslations
+  },
+  'zh-CN': {
+    translation: zhTranslations
+  },
+  'zh-TW': {
+    translation: zhTranslations
   }
 };
 

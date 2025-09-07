@@ -22,13 +22,14 @@ import {
   Clear,
   FilterList,
   Info,
+  Settings,
   Settings as SettingsIcon,
   Preview as PreviewIcon,
   History as HistoryIcon
 } from '@mui/icons-material';
 import GitHubIcon from './GitHubIcon';
 import LanguageSwitcher from './LanguageSwitcher';
-import { parseCurl } from '../utils/curlParser';
+import { parseCurl, type ParsedCurl } from '../utils/curlParser';
 import { FilterEngine } from '../utils/filterEngine';
 import type { FilterRule, FilterContext, FilterResult } from '../types/filterRules';
 import { loadRules } from '../utils/ruleStorage';
@@ -67,6 +68,11 @@ const CurlFilter: React.FC = () => {
   const [outputCurl, setOutputCurl] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [inputValidation, setInputValidation] = useState<{
+    isValid: boolean;
+    message: string;
+    severity: 'error' | 'warning' | 'info';
+  } | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
   const [isRuleManagerOpen, setIsRuleManagerOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -86,7 +92,8 @@ const CurlFilter: React.FC = () => {
       const loadedRules = await loadRules();
       setRules(loadedRules);
       filterEngine.setRules(loadedRules);
-    } catch (err) {
+    } catch (error) {
+      console.error('加载过滤规则失败:', error);
       setError('加载过滤规则失败');
     }
   }, [filterEngine]);
@@ -158,7 +165,7 @@ const CurlFilter: React.FC = () => {
     } catch (err) {
       setError(t('messages.parseError', { error: (err as Error).message }));
     }
-  }, [inputCurl, filterEngine]);
+  }, [inputCurl, filterEngine, t]);
 
   // 自动过滤函数（带防抖）
   const autoFilter = useCallback((curlText: string) => {
@@ -200,7 +207,7 @@ const CurlFilter: React.FC = () => {
   }, [filterEngine, inputCurl, handleFilter]);
 
   // 从过滤上下文构建cURL命令
-  const buildCurlFromContext = (parsed: any): string => {
+  const buildCurlFromContext = (parsed: ParsedCurl): string => {
     let command = 'curl';
 
     // 添加方法
@@ -245,7 +252,8 @@ const CurlFilter: React.FC = () => {
     try {
       await navigator.clipboard.writeText(outputCurl);
       setSuccess(t('messages.copySuccess'));
-    } catch (err) {
+    } catch (error) {
+      console.error('复制失败:', error);
       setError(t('messages.copyFailed'));
     }
   }, [outputCurl, t]);
@@ -262,12 +270,65 @@ const CurlFilter: React.FC = () => {
     }
   }, []);
 
+  // 验证cURL输入
+  const validateCurlInput = useCallback((value: string) => {
+    if (!value.trim()) {
+      setInputValidation(null);
+      return;
+    }
+
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue.startsWith('curl')) {
+      setInputValidation({
+        isValid: false,
+        message: '输入应该以 "curl" 开头',
+        severity: 'error'
+      });
+      return;
+    }
+
+    if (!trimmedValue.includes('http')) {
+      setInputValidation({
+        isValid: false,
+        message: '未检测到有效的URL',
+        severity: 'error'
+      });
+      return;
+    }
+
+    // 检查是否包含常见的Chrome复制特征
+    const chromeFeatures = ['-H', '--header', '-X', '--request', '-d', '--data'];
+    const hasFeatures = chromeFeatures.some(feature => trimmedValue.includes(feature));
+
+    if (!hasFeatures) {
+      setInputValidation({
+        isValid: true,
+        message: '这看起来是一个简单的cURL命令，可能不需要过滤',
+        severity: 'info'
+      });
+      return;
+    }
+
+    setInputValidation({
+      isValid: true,
+      message: '检测到有效的cURL命令',
+      severity: 'info'
+    });
+  }, []);
+
   // 处理输入变化
   const handleInputChange = useCallback((value: string) => {
     setInputCurl(value);
+    setError('');
+    setSuccess('');
+
+    // 验证输入
+    validateCurlInput(value);
+
     // 触发自动过滤
     autoFilter(value);
-  }, [autoFilter]);
+  }, [autoFilter, validateCurlInput]);
 
   const handleCloseSnackbar = useCallback(() => {
     setError('');
@@ -285,6 +346,36 @@ const CurlFilter: React.FC = () => {
       setError('请先输入curl命令');
     }
   };
+
+  // 键盘快捷键处理
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl/Cmd + Enter: 应用过滤规则
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        if (inputCurl.trim() && rules && Array.isArray(rules) && rules.filter(r => r.enabled).length > 0) {
+          handleFilter();
+        }
+      }
+
+      // Ctrl/Cmd + K: 清空输入
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+        event.preventDefault();
+        handleClear();
+      }
+
+      // Ctrl/Cmd + M: 打开规则管理
+      if ((event.ctrlKey || event.metaKey) && event.key === 'm') {
+        event.preventDefault();
+        handleOpenRuleManager();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [inputCurl, rules, handleFilter, handleClear, handleOpenRuleManager]);
 
   return (
     <Box className="curl-filter-container">
@@ -316,31 +407,39 @@ const CurlFilter: React.FC = () => {
           </Box>
 
           <Box className="header-actions">
-            <Button
-              variant="outlined"
-              startIcon={<SettingsIcon />}
-              onClick={handleOpenRuleManager}
-              size="small"
-            >
-              {t('buttons.ruleManagement')}
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<PreviewIcon />}
-              onClick={handleOpenPreview}
-              disabled={!inputCurl.trim()}
-              size="small"
-            >
-              {t('buttons.previewEffect')}
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<HistoryIcon />}
-              onClick={() => setIsHistoryManagerOpen(true)}
-              size="small"
-            >
-              {t('buttons.historyRecord')}
-            </Button>
+            <Tooltip title="管理过滤规则，添加、编辑或删除规则 (Ctrl+M)">
+              <Button
+                variant="outlined"
+                startIcon={<SettingsIcon />}
+                onClick={handleOpenRuleManager}
+                size="small"
+              >
+                {t('buttons.ruleManagement')}
+              </Button>
+            </Tooltip>
+            <Tooltip title={!inputCurl.trim() ? '请先输入cURL命令' : '预览过滤效果'}>
+              <span>
+                <Button
+                  variant="outlined"
+                  startIcon={<PreviewIcon />}
+                  onClick={handleOpenPreview}
+                  disabled={!inputCurl.trim()}
+                  size="small"
+                >
+                  {t('buttons.previewEffect')}
+                </Button>
+              </span>
+            </Tooltip>
+            <Tooltip title="查看历史过滤记录">
+              <Button
+                variant="outlined"
+                startIcon={<HistoryIcon />}
+                onClick={() => setIsHistoryManagerOpen(true)}
+                size="small"
+              >
+                {t('buttons.historyRecord')}
+              </Button>
+            </Tooltip>
           </Box>
         </Box>
 
@@ -358,9 +457,38 @@ const CurlFilter: React.FC = () => {
 
         <TabPanel value={currentTab} index={0}>
           <Box className="input-section">
-            <Typography variant="h6" className="section-title">
-              {t('input.curlCommand')}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Typography variant="h6" className="section-title">
+                {t('input.curlCommand')}
+              </Typography>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => {
+                  const exampleCurl = `curl 'https://api.example.com/users?page=1&limit=10' \\
+  -H 'accept: application/json, text/plain, */*' \\
+  -H 'accept-language: zh-CN,zh;q=0.9,en;q=0.8' \\
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' \\
+  -H 'cache-control: no-cache' \\
+  -H 'content-type: application/json' \\
+  -H 'cookie: session_id=abc123; user_pref=dark_mode' \\
+  -H 'pragma: no-cache' \\
+  -H 'referer: https://example.com/dashboard' \\
+  -H 'sec-ch-ua: "Chrome";v="120", "Chromium";v="120"' \\
+  -H 'sec-ch-ua-mobile: ?0' \\
+  -H 'sec-ch-ua-platform: "macOS"' \\
+  -H 'sec-fetch-dest: empty' \\
+  -H 'sec-fetch-mode: cors' \\
+  -H 'sec-fetch-site: cross-site' \\
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' \\
+  --compressed`;
+                  handleInputChange(exampleCurl);
+                }}
+                sx={{ textTransform: 'none' }}
+              >
+                使用示例
+              </Button>
+            </Box>
             <TextField
               multiline
               rows={6}
@@ -371,32 +499,88 @@ const CurlFilter: React.FC = () => {
               onChange={(e) => handleInputChange(e.target.value)}
               className="input-field"
             />
+
+            {inputValidation && (
+              <Alert
+                severity={inputValidation.severity}
+                sx={{ mt: 1 }}
+                variant="outlined"
+              >
+                {inputValidation.message}
+              </Alert>
+            )}
           </Box>
 
           <Box className="controls-section">
             <Box className="main-controls">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleFilter()}
-                disabled={!inputCurl.trim() || !rules || !Array.isArray(rules) || rules.filter(r => r.enabled).length === 0}
-                className="filter-button"
+              <Tooltip
+                title={
+                  !inputCurl.trim()
+                    ? '请先输入cURL命令'
+                    : (!rules || !Array.isArray(rules) || rules.filter(r => r.enabled).length === 0)
+                      ? '请先配置并启用过滤规则'
+                      : '应用过滤规则 (Ctrl+Enter)'
+                }
               >
-                <FilterList className="button-icon" />
-                {t('buttons.applyFilter')}
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={handleClear}
-                className="clear-button"
-              >
-                <Clear className="button-icon" />
-                {t('buttons.clear')}
-              </Button>
+                <span>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleFilter()}
+                    disabled={!inputCurl.trim() || !rules || !Array.isArray(rules) || rules.filter(r => r.enabled).length === 0}
+                    className="filter-button"
+                  >
+                    <FilterList className="button-icon" />
+                    {t('buttons.applyFilter')}
+                  </Button>
+                </span>
+              </Tooltip>
+              <Tooltip title="清空输入内容 (Ctrl+K)">
+                <Button
+                  variant="outlined"
+                  onClick={handleClear}
+                  className="clear-button"
+                >
+                  <Clear className="button-icon" />
+                  {t('buttons.clear')}
+                </Button>
+              </Tooltip>
             </Box>
 
-            {(!rules || !Array.isArray(rules) || rules.filter(r => r.enabled).length === 0) && (
-              <Alert severity="warning" sx={{ mt: 2 }}>
+            {(!rules || !Array.isArray(rules) || rules.length === 0) && (
+              <Alert
+                severity="info"
+                sx={{ mt: 2 }}
+                action={
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => setIsRuleManagerOpen(true)}
+                    startIcon={<Settings />}
+                  >
+                    {t('buttons.ruleManagement')}
+                  </Button>
+                }
+              >
+                {t('messages.noRules')}
+              </Alert>
+            )}
+
+            {rules && Array.isArray(rules) && rules.length > 0 && rules.filter(r => r.enabled).length === 0 && (
+              <Alert
+                severity="warning"
+                sx={{ mt: 2 }}
+                action={
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => setIsRuleManagerOpen(true)}
+                    startIcon={<Settings />}
+                  >
+                    {t('buttons.ruleManagement')}
+                  </Button>
+                }
+              >
                 {t('messages.noEnabledRules')}
               </Alert>
             )}

@@ -32,8 +32,13 @@ This tool helps you clean up these cURL commands by applying configurable filter
 - **Smart Filtering**: Remove unwanted headers, query parameters, and form data
 - **Configurable Rules**: Create custom filtering rules with regex patterns
 - **Real-time Preview**: See filtering results as you type
+- **Input Validation**: Smart detection and validation of cURL commands
+- **Quick Start**: One-click example to get started immediately
+- **Keyboard Shortcuts**: Efficient workflow with keyboard shortcuts
 - **History Management**: Keep track of your filtering history
 - **Export/Import**: Save and share your filtering rules
+- **Rule Templates**: Pre-built templates for common use cases
+- **Multi-language Support**: Available in English and Chinese
 - **Responsive Design**: Works on desktop and mobile devices
 
 ## 🛠️ Installation
@@ -75,17 +80,33 @@ The built files will be in the `dist` directory.
 
 ## 📖 Usage
 
-1. **Paste cURL Command**: Copy a cURL command from your browser's developer tools and paste it into the input field.
+### Quick Start
+
+1. **Try the Example**: Click "Use Example" to load a sample cURL command
+2. **Configure Rules**: Click "Rule Management" (Ctrl+M) to set up filtering rules
+3. **Apply Filters**: Click "Apply Filter Rules" (Ctrl+Enter) to process your cURL command
+4. **Copy Result**: Use the copy button to copy the cleaned cURL command
+
+### Detailed Steps
+
+1. **Paste cURL Command**: Copy a cURL command from your browser's developer tools and paste it into the input field. The tool will automatically validate your input.
 
 2. **Configure Rules**: Click "Rule Management" to set up filtering rules:
    - Remove specific headers (e.g., `User-Agent`, `Accept-Language`)
    - Filter query parameters
    - Clean form data
    - Remove JSON body fields
+   - Use pre-built templates for common scenarios
 
-3. **Apply Filters**: Click "Apply Filter Rules" to process your cURL command.
+3. **Apply Filters**: Click "Apply Filter Rules" to process your cURL command. You can also use Ctrl+Enter for quick processing.
 
 4. **Copy Result**: Use the copy button to copy the cleaned cURL command.
+
+### Keyboard Shortcuts
+
+- **Ctrl+Enter**: Apply filter rules
+- **Ctrl+K**: Clear input
+- **Ctrl+M**: Open rule management
 
 ### Example
 

@@ -91,6 +91,53 @@ export function validateRule(rule: Partial<FilterRule>): RuleValidationResult {
 }
 
 /**
+ * 验证单个规则字段
+ */
+export function validateRuleField(
+  field: keyof FilterRule,
+  value: any,
+  rule?: Partial<FilterRule>
+): string[] {
+  const errors: string[] = [];
+
+  switch (field) {
+    case 'name':
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        errors.push('规则名称不能为空');
+      }
+      break;
+
+    case 'matchValue':
+      if (rule?.action) {
+        const needsMatchValue = rule.action === FilterAction.DELETE || rule.action === FilterAction.KEEP;
+        const hasMatchValue = value && value.trim() !== '';
+
+        if (needsMatchValue && !hasMatchValue) {
+          errors.push('该动作类型需要指定匹配值');
+        }
+      }
+
+      // 验证正则表达式
+      if (rule?.matchMode === MatchMode.REGEX && value) {
+        try {
+          new RegExp(value);
+        } catch (e) {
+          errors.push('正则表达式格式无效');
+        }
+      }
+      break;
+
+    case 'priority':
+      if (typeof value === 'number' && !isValidPriority(value)) {
+        errors.push('优先级必须在0-100之间');
+      }
+      break;
+  }
+
+  return errors;
+}
+
+/**
  * 验证规则列表
  */
 export function validateRules(rules: FilterRule[]): RuleValidationResult {

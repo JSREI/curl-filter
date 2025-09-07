@@ -4,14 +4,45 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 25521 --host",
     "build": "tsc -b && vite build",
+    "build:analyze": "npm run build && npx vite-bundle-analyzer dist",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules/.vite",
+    "prepare": "npm run type-check && npm run lint && npm run test:run"
   },
+  "keywords": [
+    "curl",
+    "filter",
+    "http",
+    "developer-tools",
+    "web-development",
+    "api-testing",
+    "request-cleaning",
+    "browser-tools",
+    "react",
+    "typescript"
+  ],
+  "author": {
+    "name": "JSREI Team",
+    "url": "https://github.com/JSREI"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JSREI/curl-filter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JSREI/curl-filter/issues"
+  },
+  "homepage": "https://jsrei.github.io/curl-filter/",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
