@@ -364,13 +364,24 @@ export class IndexedDBStorageManager {
     try {
       await this.executeTransaction(STORES.RULES, 'readwrite', (store) => {
         const rulesStore = store as IDBObjectStore;
-        return Promise.all(rules.map(rule =>
-          new Promise<void>((resolve, reject) => {
-            const request = rulesStore.put(rule);
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
-          })
-        ));
+
+        // 先清空所有现有规则
+        const clearPromise = new Promise<void>((resolve, reject) => {
+          const clearRequest = rulesStore.clear();
+          clearRequest.onsuccess = () => resolve();
+          clearRequest.onerror = () => reject(clearRequest.error);
+        });
+
+        // 等待清空完成后，再保存新规则
+        return clearPromise.then(() => {
+          return Promise.all(rules.map(rule =>
+            new Promise<void>((resolve, reject) => {
+              const request = rulesStore.put(rule);
+              request.onsuccess = () => resolve();
+              request.onerror = () => reject(request.error);
+            })
+          ));
+        });
       });
       return true;
     } catch (error) {
