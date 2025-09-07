@@ -90,3 +90,7 @@ npm run preview
    - 进入仓库的 Actions 页面
    - 选择 "部署到 GitHub Pages" 工作流
    - 点击 "Run workflow" 手动触发
+
+4. **仓库迁移**：
+   - 如果仓库地址发生变更，需要更新本地远程地址
+   - 使用 `git remote set-url origin <新地址>` 更新
