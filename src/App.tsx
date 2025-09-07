@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import CurlFilter from './components/CurlFilter';
 import './App.css';
+import './i18n';
 
 // 创建MUI主题
 const theme = createTheme({

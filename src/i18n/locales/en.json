@@ -1,0 +1,128 @@
+{
+  "app": {
+    "title": "cURL Filter",
+    "subtitle": "Clean up redundant headers and parameters from Chrome-copied cURL commands for easy import into Postman, Apifox, Coze plugins and other external systems"
+  },
+  "buttons": {
+    "ruleManagement": "Rule Management",
+    "previewEffect": "Preview Effect",
+    "historyRecord": "History Record",
+    "applyFilter": "Apply Filter Rules",
+    "clear": "Clear",
+    "copy": "Copy",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "import": "Import",
+    "export": "Export",
+    "reset": "Reset",
+    "confirm": "Confirm",
+    "close": "Close",
+    "refresh": "Refresh",
+    "applyTemplate": "Apply Template"
+  },
+  "tabs": {
+    "filterTool": "Filter Tool",
+    "ruleStatus": "Rule Status ({{enabled}}/{{total}})",
+    "historyRecord": "History Record",
+    "searchFilter": "Search Filter",
+    "statisticsInfo": "Statistics Info",
+    "ruleList": "Rule List",
+    "ruleEditor": "Rule Editor",
+    "templateSelector": "Template Selector",
+    "ruleStatistics": "Rule Statistics"
+  },
+  "input": {
+    "curlCommand": "Input cURL Command",
+    "placeholder": "Paste your cURL command here...",
+    "filteredCommand": "Filtered cURL Command"
+  },
+  "messages": {
+    "inputRequired": "Please input cURL command",
+    "parseUrlError": "Unable to parse URL, please check cURL command format",
+    "parseError": "Error parsing cURL command: {{error}}",
+    "filterComplete": "cURL command filtering completed, applied {{count}} rules",
+    "copySuccess": "Copied to clipboard",
+    "copyFailed": "Copy failed, please copy manually",
+    "saveSuccess": "Save successful",
+    "saveFailed": "Save failed",
+    "loadFailed": "Load failed",
+    "deleteSuccess": "Delete successful",
+    "deleteFailed": "Delete failed",
+    "noEnabledRules": "No enabled filter rules, please configure rules in rule management first",
+    "noRules": "No configured rules, please click 'Rule Management' to add filter rules",
+    "noHistory": "No history records",
+    "loading": "Loading...",
+    "loadHistoryFailed": "Failed to load history records",
+    "saveHistoryFailed": "Failed to save history record",
+    "configImportSuccess": "Configuration imported successfully",
+    "configImportFailed": "Configuration import failed",
+    "configExportSuccess": "Configuration exported successfully",
+    "configExportFailed": "Configuration export failed",
+    "fileReadFailed": "File read failed",
+    "configSaveFailed": "Configuration save failed"
+  },
+  "rules": {
+    "currentStatus": "Current Rule Status",
+    "totalRules": "Total Rules: {{total}}",
+    "enabled": "Enabled: {{count}}",
+    "disabled": "Disabled: {{count}}",
+    "appliedRules": "Applied {{count}} rules",
+    "warnings": "{{count}} warnings",
+    "priority": "Priority: {{priority}}",
+    "name": "Rule Name",
+    "description": "Description",
+    "target": "Target",
+    "action": "Action",
+    "matchMode": "Match Mode",
+    "matchValue": "Match Value",
+    "enabled": "Enabled"
+  },
+  "history": {
+    "title": "History Record Management",
+    "total": "Total: {{count}}",
+    "favorite": "Favorite: {{count}}",
+    "tags": "Tags: {{count}}",
+    "untitledRecord": "Untitled Record",
+    "searchPlaceholder": "Search history records...",
+    "filterByTags": "Filter by tags",
+    "favoriteOnly": "Favorite only",
+    "sortBy": "Sort by",
+    "sortOrder": "Sort order"
+  },
+  "tooltips": {
+    "viewSourceCode": "View source code",
+    "copyToClipboard": "Copy to clipboard"
+  },
+  "dialogs": {
+    "filterRuleManagement": "Filter Rule Management",
+    "filterEffectPreview": "Filter Effect Preview"
+  },
+  "templates": {
+    "authOnly": "Authentication Only",
+    "debugCleanup": "Debug Cleanup", 
+    "apiTest": "API Test",
+    "minimal": "Minimal Request",
+    "keepAll": "Keep All",
+    "selectTemplate": "Select Rule Template"
+  },
+  "targets": {
+    "headers": "Headers",
+    "queryParams": "Query Parameters", 
+    "formData": "Form Data",
+    "jsonBody": "JSON Body"
+  },
+  "actions": {
+    "keep": "Keep",
+    "delete": "Delete",
+    "keepAll": "Keep All",
+    "deleteAll": "Delete All"
+  },
+  "matchModes": {
+    "exact": "Exact Match",
+    "regex": "Regular Expression",
+    "contains": "Contains"
+  }
+}

@@ -27,6 +27,7 @@ import {
   History as HistoryIcon
 } from '@mui/icons-material';
 import GitHubIcon from './GitHubIcon';
+import LanguageSwitcher from './LanguageSwitcher';
 import { parseCurl } from '../utils/curlParser';
 import { FilterEngine } from '../utils/filterEngine';
 import type { FilterRule, FilterContext, FilterResult } from '../types/filterRules';
@@ -35,6 +36,7 @@ import { saveHistoryEntry } from '../utils/indexedDBStorage';
 import RuleManager from './RuleManager/RuleManager';
 import RulePreview from './RuleManager/RulePreview';
 import HistoryManager from './HistoryManager/HistoryManager';
+import { useTranslation } from 'react-i18next';
 import './CurlFilter.css';
 
 interface TabPanelProps {
@@ -60,6 +62,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const CurlFilter: React.FC = () => {
+  const { t } = useTranslation();
   const [inputCurl, setInputCurl] = useState('');
   const [outputCurl, setOutputCurl] = useState('');
   const [error, setError] = useState('');
@@ -98,14 +101,14 @@ const CurlFilter: React.FC = () => {
       const textToProcess = curlText || inputCurl;
 
       if (!textToProcess.trim()) {
-        setError('请输入cURL命令');
+        setError(t('messages.inputRequired'));
         return;
       }
 
       const parsed = parseCurl(textToProcess);
 
       if (!parsed.url) {
-        setError('无法解析URL，请检查cURL命令格式');
+        setError(t('messages.parseUrlError'));
         return;
       }
 
@@ -135,7 +138,7 @@ const CurlFilter: React.FC = () => {
       const newCurl = buildCurlFromContext(filteredParsed);
       setOutputCurl(newCurl);
       setError('');
-      setSuccess(`cURL命令过滤完成，应用了 ${result.appliedRules.length} 个规则`);
+      setSuccess(t('messages.filterComplete', { count: result.appliedRules.length }));
 
       // 保存到历史记录
       try {
@@ -146,14 +149,14 @@ const CurlFilter: React.FC = () => {
           result
         );
       } catch (historyError) {
-        console.warn('保存历史记录失败:', historyError);
+        console.warn(t('messages.saveHistoryFailed'), historyError);
       }
 
       if (result.warnings.length > 0) {
         console.warn('过滤警告:', result.warnings);
       }
     } catch (err) {
-      setError('解析cURL命令时出错: ' + (err as Error).message);
+      setError(t('messages.parseError', { error: (err as Error).message }));
     }
   }, [inputCurl, filterEngine]);
 
@@ -241,11 +244,11 @@ const CurlFilter: React.FC = () => {
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(outputCurl);
-      setSuccess('已复制到剪贴板');
+      setSuccess(t('messages.copySuccess'));
     } catch (err) {
-      setError('复制失败，请手动复制');
+      setError(t('messages.copyFailed'));
     }
-  }, [outputCurl]);
+  }, [outputCurl, t]);
 
   const handleClear = useCallback(() => {
     setInputCurl('');
@@ -291,22 +294,25 @@ const CurlFilter: React.FC = () => {
             <Box className="header-text">
               <Typography variant="h4" component="h1" className="title">
                 <FilterList className="title-icon" />
-                cURL 过滤器
+                {t('app.title')}
               </Typography>
               <Typography variant="body1" color="text.secondary" className="subtitle">
-                清理Chrome复制的cURL命令中的冗余请求头和参数，便于导入Postman、Apifox、Coze插件等外部系统
+                {t('app.subtitle')}
               </Typography>
             </Box>
-            <Tooltip title="查看源代码">
-              <IconButton
-                onClick={() => window.open('https://github.com/JSREI/curl-filter', '_blank')}
-                color="primary"
-                className="github-button"
-                size="large"
-              >
-                <GitHubIcon />
-              </IconButton>
-            </Tooltip>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <LanguageSwitcher />
+              <Tooltip title={t('tooltips.viewSourceCode')}>
+                <IconButton
+                  onClick={() => window.open('https://github.com/JSREI/curl-filter', '_blank')}
+                  color="primary"
+                  className="github-button"
+                  size="large"
+                >
+                  <GitHubIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
 
           <Box className="header-actions">
@@ -316,7 +322,7 @@ const CurlFilter: React.FC = () => {
               onClick={handleOpenRuleManager}
               size="small"
             >
-              规则管理
+              {t('buttons.ruleManagement')}
             </Button>
             <Button
               variant="outlined"
@@ -325,7 +331,7 @@ const CurlFilter: React.FC = () => {
               disabled={!inputCurl.trim()}
               size="small"
             >
-              预览效果
+              {t('buttons.previewEffect')}
             </Button>
             <Button
               variant="outlined"
@@ -333,7 +339,7 @@ const CurlFilter: React.FC = () => {
               onClick={() => setIsHistoryManagerOpen(true)}
               size="small"
             >
-              历史记录
+              {t('buttons.historyRecord')}
             </Button>
           </Box>
         </Box>
@@ -342,22 +348,25 @@ const CurlFilter: React.FC = () => {
 
         <Box className="tabs-section">
           <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
-            <Tab label="过滤工具" />
-            <Tab label={`规则状态 (${rules && Array.isArray(rules) ? rules.filter(r => r.enabled).length : 0}/${rules && Array.isArray(rules) ? rules.length : 0})`} />
+            <Tab label={t('tabs.filterTool')} />
+            <Tab label={t('tabs.ruleStatus', {
+              enabled: rules && Array.isArray(rules) ? rules.filter(r => r.enabled).length : 0,
+              total: rules && Array.isArray(rules) ? rules.length : 0
+            })} />
           </Tabs>
         </Box>
 
         <TabPanel value={currentTab} index={0}>
           <Box className="input-section">
             <Typography variant="h6" className="section-title">
-              输入 cURL 命令
+              {t('input.curlCommand')}
             </Typography>
             <TextField
               multiline
               rows={6}
               fullWidth
               variant="outlined"
-              placeholder="粘贴你的 cURL 命令到这里..."
+              placeholder={t('input.placeholder')}
               value={inputCurl}
               onChange={(e) => handleInputChange(e.target.value)}
               className="input-field"
@@ -374,7 +383,7 @@ const CurlFilter: React.FC = () => {
                 className="filter-button"
               >
                 <FilterList className="button-icon" />
-                应用过滤规则
+                {t('buttons.applyFilter')}
               </Button>
               <Button
                 variant="outlined"
@@ -382,13 +391,13 @@ const CurlFilter: React.FC = () => {
                 className="clear-button"
               >
                 <Clear className="button-icon" />
-                清空
+                {t('buttons.clear')}
               </Button>
             </Box>
 
             {(!rules || !Array.isArray(rules) || rules.filter(r => r.enabled).length === 0) && (
               <Alert severity="warning" sx={{ mt: 2 }}>
-                没有启用的过滤规则，请先在规则管理中配置规则
+                {t('messages.noEnabledRules')}
               </Alert>
             )}
           </Box>
@@ -399,9 +408,9 @@ const CurlFilter: React.FC = () => {
               <Box className="output-section">
                 <Box className="output-header">
                   <Typography variant="h6" className="section-title">
-                    过滤后的 cURL 命令
+                    {t('input.filteredCommand')}
                   </Typography>
-                  <Tooltip title="复制到剪贴板">
+                  <Tooltip title={t('tooltips.copyToClipboard')}>
                     <IconButton
                       onClick={handleCopy}
                       color="primary"
@@ -426,8 +435,8 @@ const CurlFilter: React.FC = () => {
                 {filterResult && (
                   <Box className="filter-summary" sx={{ mt: 2 }}>
                     <Typography variant="body2" color="text.secondary">
-                      应用了 {filterResult.appliedRules.length} 个规则
-                      {filterResult.warnings.length > 0 && ` | ${filterResult.warnings.length} 个警告`}
+                      {t('rules.appliedRules', { count: filterResult.appliedRules.length })}
+                      {filterResult.warnings.length > 0 && ` | ${t('rules.warnings', { count: filterResult.warnings.length })}`}
                     </Typography>
                   </Box>
                 )}
@@ -440,19 +449,19 @@ const CurlFilter: React.FC = () => {
           <Box className="rules-status-section">
             <Typography variant="h6" className="section-title" gutterBottom>
               <Info className="section-icon" />
-              当前规则状态
+              {t('rules.currentStatus')}
             </Typography>
 
             {!rules || !Array.isArray(rules) || rules.length === 0 ? (
               <Alert severity="info">
-                暂无配置规则，请点击"规则管理"添加过滤规则
+                {t('messages.noRules')}
               </Alert>
             ) : (
               <Box className="rules-chips">
                 {rules.map((rule) => (
                   <Chip
                     key={rule.id}
-                    label={`${rule.name} (优先级: ${rule.priority})`}
+                    label={`${rule.name} (${t('rules.priority', { priority: rule.priority })})`}
                     variant={rule.enabled ? "filled" : "outlined"}
                     color={rule.enabled ? "primary" : "default"}
                     className="rule-chip"
@@ -464,9 +473,9 @@ const CurlFilter: React.FC = () => {
 
             <Box className="rules-summary" sx={{ mt: 2 }}>
               <Typography variant="body2" color="text.secondary">
-                总规则数: {rules && Array.isArray(rules) ? rules.length : 0} |
-                启用: {rules && Array.isArray(rules) ? rules.filter(r => r.enabled).length : 0} |
-                禁用: {rules && Array.isArray(rules) ? rules.filter(r => !r.enabled).length : 0}
+                {t('rules.totalRules', { total: rules && Array.isArray(rules) ? rules.length : 0 })} |
+                {t('rules.enabled', { count: rules && Array.isArray(rules) ? rules.filter(r => r.enabled).length : 0 })} |
+                {t('rules.disabled', { count: rules && Array.isArray(rules) ? rules.filter(r => !r.enabled).length : 0 })}
               </Typography>
             </Box>
           </Box>
@@ -484,7 +493,7 @@ const CurlFilter: React.FC = () => {
           sx: { height: '90vh' }
         }}
       >
-        <DialogTitle>过滤规则管理</DialogTitle>
+        <DialogTitle>{t('dialogs.filterRuleManagement')}</DialogTitle>
         <DialogContent sx={{ p: 0 }}>
           <RuleManager onRulesChange={handleRulesChange} />
         </DialogContent>
@@ -497,7 +506,7 @@ const CurlFilter: React.FC = () => {
         maxWidth="lg"
         fullWidth
       >
-        <DialogTitle>过滤效果预览</DialogTitle>
+        <DialogTitle>{t('dialogs.filterEffectPreview')}</DialogTitle>
         <DialogContent>
           {inputCurl && (
             <RulePreview

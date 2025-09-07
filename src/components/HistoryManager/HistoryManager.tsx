@@ -42,6 +42,7 @@ import {
 } from '@mui/icons-material';
 import type { HistoryEntry, HistoryQueryOptions, HistoryStats } from '../../types/filterRules';
 import { indexedDBStorageManager } from '../../utils/indexedDBStorage';
+import { useTranslation } from 'react-i18next';
 import './HistoryManager.css';
 
 interface TabPanelProps {
@@ -70,6 +71,7 @@ interface HistoryManagerProps {
 }
 
 const HistoryManager: React.FC<HistoryManagerProps> = ({ onSelectEntry }) => {
+  const { t } = useTranslation();
   const [currentTab, setCurrentTab] = useState(0);
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [stats, setStats] = useState<HistoryStats | null>(null);
@@ -115,12 +117,12 @@ const HistoryManager: React.FC<HistoryManagerProps> = ({ onSelectEntry }) => {
       setEntries(historyEntries);
       setStats(historyStats);
     } catch (err) {
-      setError('加载历史记录失败');
-      console.error('加载历史记录失败:', err);
+      setError(t('messages.loadHistoryFailed'));
+      console.error(t('messages.loadHistoryFailed'), err);
     } finally {
       setLoading(false);
     }
-  }, [searchText, selectedTags, favoriteOnly, sortBy, sortOrder]);
+  }, [searchText, selectedTags, favoriteOnly, sortBy, sortOrder, t]);
 
   // 初始化加载
   useEffect(() => {
@@ -233,14 +235,14 @@ const HistoryManager: React.FC<HistoryManagerProps> = ({ onSelectEntry }) => {
       <Box className="history-header">
         <Typography variant="h5" component="h2" className="history-title">
           <HistoryIcon className="title-icon" />
-          历史记录管理
+          {t('history.title')}
         </Typography>
-        
+
         {stats && (
           <Box className="history-stats">
-            <Chip label={`总计: ${stats.totalEntries}`} size="small" />
-            <Chip label={`收藏: ${stats.favoriteEntries}`} size="small" color="primary" />
-            <Chip label={`标签: ${Object.keys(stats.tagsCount).length}`} size="small" color="secondary" />
+            <Chip label={t('history.total', { count: stats.totalEntries })} size="small" />
+            <Chip label={t('history.favorite', { count: stats.favoriteEntries })} size="small" color="primary" />
+            <Chip label={t('history.tags', { count: Object.keys(stats.tagsCount).length })} size="small" color="secondary" />
           </Box>
         )}
       </Box>
@@ -249,18 +251,18 @@ const HistoryManager: React.FC<HistoryManagerProps> = ({ onSelectEntry }) => {
 
       <Box className="history-tabs">
         <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
-          <Tab label="历史记录" />
-          <Tab label="搜索过滤" />
-          <Tab label="统计信息" />
+          <Tab label={t('tabs.historyRecord')} />
+          <Tab label={t('tabs.searchFilter')} />
+          <Tab label={t('tabs.statisticsInfo')} />
         </Tabs>
       </Box>
 
       <TabPanel value={currentTab} index={0}>
         <Box className="history-list-section">
           {loading ? (
-            <Typography>加载中...</Typography>
+            <Typography>{t('messages.loading')}</Typography>
           ) : entries.length === 0 ? (
-            <Alert severity="info">暂无历史记录</Alert>
+            <Alert severity="info">{t('messages.noHistory')}</Alert>
           ) : (
             <List className="history-list">
               {entries.map((entry) => (
@@ -269,7 +271,7 @@ const HistoryManager: React.FC<HistoryManagerProps> = ({ onSelectEntry }) => {
                     primary={
                       <Box className="history-item-header">
                         <Typography variant="subtitle1" className="history-title">
-                          {entry.title || '未命名记录'}
+                          {entry.title || t('history.untitledRecord')}
                         </Typography>
                         <Box className="history-item-actions">
                           {entry.favorite && <Star className="favorite-icon" />}

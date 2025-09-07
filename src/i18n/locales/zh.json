@@ -1,0 +1,128 @@
+{
+  "app": {
+    "title": "cURL 过滤器",
+    "subtitle": "清理Chrome复制的cURL命令中的冗余请求头和参数，便于导入Postman、Apifox、Coze插件等外部系统"
+  },
+  "buttons": {
+    "ruleManagement": "规则管理",
+    "previewEffect": "预览效果",
+    "historyRecord": "历史记录",
+    "applyFilter": "应用过滤规则",
+    "clear": "清空",
+    "copy": "复制",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "import": "导入",
+    "export": "导出",
+    "reset": "重置",
+    "confirm": "确认",
+    "close": "关闭",
+    "refresh": "刷新",
+    "applyTemplate": "应用模板"
+  },
+  "tabs": {
+    "filterTool": "过滤工具",
+    "ruleStatus": "规则状态 ({{enabled}}/{{total}})",
+    "historyRecord": "历史记录",
+    "searchFilter": "搜索过滤",
+    "statisticsInfo": "统计信息",
+    "ruleList": "规则列表",
+    "ruleEditor": "规则编辑器",
+    "templateSelector": "模板选择器",
+    "ruleStatistics": "规则统计"
+  },
+  "input": {
+    "curlCommand": "输入 cURL 命令",
+    "placeholder": "粘贴你的 cURL 命令到这里...",
+    "filteredCommand": "过滤后的 cURL 命令"
+  },
+  "messages": {
+    "inputRequired": "请输入cURL命令",
+    "parseUrlError": "无法解析URL，请检查cURL命令格式",
+    "parseError": "解析cURL命令时出错: {{error}}",
+    "filterComplete": "cURL命令过滤完成，应用了 {{count}} 个规则",
+    "copySuccess": "已复制到剪贴板",
+    "copyFailed": "复制失败，请手动复制",
+    "saveSuccess": "保存成功",
+    "saveFailed": "保存失败",
+    "loadFailed": "加载失败",
+    "deleteSuccess": "删除成功",
+    "deleteFailed": "删除失败",
+    "noEnabledRules": "没有启用的过滤规则，请先在规则管理中配置规则",
+    "noRules": "暂无配置规则，请点击\"规则管理\"添加过滤规则",
+    "noHistory": "暂无历史记录",
+    "loading": "加载中...",
+    "loadHistoryFailed": "加载历史记录失败",
+    "saveHistoryFailed": "保存历史记录失败",
+    "configImportSuccess": "配置导入成功",
+    "configImportFailed": "配置导入失败",
+    "configExportSuccess": "配置导出成功",
+    "configExportFailed": "配置导出失败",
+    "fileReadFailed": "文件读取失败",
+    "configSaveFailed": "配置保存失败"
+  },
+  "rules": {
+    "currentStatus": "当前规则状态",
+    "totalRules": "总规则数: {{total}}",
+    "enabled": "启用: {{count}}",
+    "disabled": "禁用: {{count}}",
+    "appliedRules": "应用了 {{count}} 个规则",
+    "warnings": "{{count}} 个警告",
+    "priority": "优先级: {{priority}}",
+    "name": "规则名称",
+    "description": "描述",
+    "target": "目标",
+    "action": "动作",
+    "matchMode": "匹配模式",
+    "matchValue": "匹配值",
+    "enabled": "启用"
+  },
+  "history": {
+    "title": "历史记录管理",
+    "total": "总计: {{count}}",
+    "favorite": "收藏: {{count}}",
+    "tags": "标签: {{count}}",
+    "untitledRecord": "未命名记录",
+    "searchPlaceholder": "搜索历史记录...",
+    "filterByTags": "按标签过滤",
+    "favoriteOnly": "仅收藏",
+    "sortBy": "排序方式",
+    "sortOrder": "排序顺序"
+  },
+  "tooltips": {
+    "viewSourceCode": "查看源代码",
+    "copyToClipboard": "复制到剪贴板"
+  },
+  "dialogs": {
+    "filterRuleManagement": "过滤规则管理",
+    "filterEffectPreview": "过滤效果预览"
+  },
+  "templates": {
+    "authOnly": "仅认证信息",
+    "debugCleanup": "调试清理",
+    "apiTest": "API测试",
+    "minimal": "最小化请求",
+    "keepAll": "完整保留",
+    "selectTemplate": "选择规则模板"
+  },
+  "targets": {
+    "headers": "请求头",
+    "queryParams": "查询参数",
+    "formData": "表单数据",
+    "jsonBody": "JSON请求体"
+  },
+  "actions": {
+    "keep": "保留",
+    "delete": "删除",
+    "keepAll": "保留全部",
+    "deleteAll": "删除全部"
+  },
+  "matchModes": {
+    "exact": "精确匹配",
+    "regex": "正则表达式",
+    "contains": "包含"
+  }
+}

@@ -28,6 +28,7 @@ import { storageManager, saveRules, loadRules } from '../../utils/ruleStorage';
 import { validateRules } from '../../utils/ruleValidation';
 import { BUILT_IN_TEMPLATES } from '../../utils/ruleTemplates';
 import { createDefaultRule } from '../../utils/ruleValidation';
+import { useTranslation } from 'react-i18next';
 
 import RuleList from './RuleList';
 import RuleEditor from './RuleEditor';
@@ -61,6 +62,7 @@ interface RuleManagerProps {
 }
 
 const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
+  const { t } = useTranslation();
   const [rules, setRules] = useState<FilterRule[]>([]);
   const [selectedRule, setSelectedRule] = useState<FilterRule | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -83,9 +85,9 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
       setRules(loadedRules);
       onRulesChange?.(loadedRules);
     } catch (error) {
-      showNotification('加载规则失败', 'error');
+      showNotification(t('messages.loadFailed'), 'error');
     }
-  }, [onRulesChange]);
+  }, [onRulesChange, t]);
 
   // 保存规则
   const saveRulesToStorage = useCallback(async (newRules: FilterRule[]) => {
@@ -94,14 +96,14 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
       if (success) {
         setRules(newRules);
         onRulesChange?.(newRules);
-        showNotification('规则保存成功', 'success');
+        showNotification(t('messages.saveSuccess'), 'success');
       } else {
-        showNotification('规则保存失败', 'error');
+        showNotification(t('messages.saveFailed'), 'error');
       }
     } catch (error) {
-      showNotification('规则保存失败', 'error');
+      showNotification(t('messages.saveFailed'), 'error');
     }
-  }, [onRulesChange]);
+  }, [onRulesChange, t]);
 
   // 显示通知
   const showNotification = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
@@ -229,15 +231,15 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
             const success = await storageManager.saveConfig(result.config);
             if (success) {
               await loadRulesFromStorage();
-              showNotification('配置导入成功', 'success');
+              showNotification(t('messages.configImportSuccess'), 'success');
             } else {
-              showNotification('配置保存失败', 'error');
+              showNotification(t('messages.configSaveFailed'), 'error');
             }
           } else {
-            showNotification(result.error || '配置导入失败', 'error');
+            showNotification(result.error || t('messages.configImportFailed'), 'error');
           }
         } catch (error) {
-          showNotification('文件读取失败', 'error');
+          showNotification(t('messages.fileReadFailed'), 'error');
         }
       };
       reader.readAsText(file);
@@ -251,21 +253,21 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
         <Box className="rule-manager-header">
           <Typography variant="h5" component="h2" className="rule-manager-title">
             <SettingsIcon className="title-icon" />
-            过滤规则管理
+            {t('dialogs.filterRuleManagement')}
           </Typography>
-          
+
           <Box className="rule-manager-actions">
-            <Tooltip title="刷新规则">
+            <Tooltip title={t('buttons.refresh', { defaultValue: '刷新规则' })}>
               <IconButton onClick={loadRulesFromStorage} size="small">
                 <RefreshIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="导入配置">
+            <Tooltip title={t('buttons.import')}>
               <IconButton onClick={handleImport} size="small">
                 <UploadIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="导出配置">
+            <Tooltip title={t('buttons.export')}>
               <IconButton onClick={handleExport} size="small">
                 <DownloadIcon />
               </IconButton>
@@ -276,14 +278,14 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
               onClick={handleAddRule}
               size="small"
             >
-              添加规则
+              {t('buttons.add')}
             </Button>
             <Button
               variant="outlined"
               onClick={() => setIsTemplateDialogOpen(true)}
               size="small"
             >
-              应用模板
+              {t('buttons.applyTemplate', { defaultValue: '应用模板' })}
             </Button>
           </Box>
         </Box>
@@ -292,8 +294,8 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
 
         <Box className="rule-manager-content">
           <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
-            <Tab label={`规则列表 (${rules.length})`} />
-            <Tab label="规则统计" />
+            <Tab label={`${t('tabs.ruleList')} (${rules.length})`} />
+            <Tab label={t('tabs.ruleStatistics', { defaultValue: '规则统计' })} />
           </Tabs>
 
           <TabPanel value={currentTab} index={0}>
@@ -307,10 +309,10 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
 
           <TabPanel value={currentTab} index={1}>
             <Box className="rule-stats">
-              <Typography variant="h6">规则统计</Typography>
-              <Typography>总规则数: {rules.length}</Typography>
-              <Typography>启用规则数: {rules.filter(r => r.enabled).length}</Typography>
-              <Typography>禁用规则数: {rules.filter(r => !r.enabled).length}</Typography>
+              <Typography variant="h6">{t('tabs.ruleStatistics', { defaultValue: '规则统计' })}</Typography>
+              <Typography>{t('rules.totalRules', { total: rules.length })}</Typography>
+              <Typography>{t('rules.enabled', { count: rules.filter(r => r.enabled).length })}</Typography>
+              <Typography>{t('rules.disabled', { count: rules.filter(r => !r.enabled).length })}</Typography>
             </Box>
           </TabPanel>
         </Box>
@@ -324,7 +326,7 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
         fullWidth
       >
         <DialogTitle>
-          {selectedRule && rules.find(r => r.id === selectedRule.id) ? '编辑规则' : '添加规则'}
+          {selectedRule && rules.find(r => r.id === selectedRule.id) ? t('buttons.edit') + t('rules.name', { defaultValue: '规则' }) : t('buttons.add') + t('rules.name', { defaultValue: '规则' })}
         </DialogTitle>
         <DialogContent>
           {selectedRule && (
@@ -344,7 +346,7 @@ const RuleManager: React.FC<RuleManagerProps> = ({ onRulesChange }) => {
         maxWidth="xl"
         fullWidth
       >
-        <DialogTitle>选择规则模板</DialogTitle>
+        <DialogTitle>{t('templates.selectTemplate', { defaultValue: '选择规则模板' })}</DialogTitle>
         <DialogContent>
           <TemplateSelector
             templates={BUILT_IN_TEMPLATES}
