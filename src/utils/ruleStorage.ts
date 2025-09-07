@@ -2,15 +2,8 @@
 
 import type {
   FilterRule,
-  StoredConfig,
-  ImportedConfig
+  StoredConfig
 } from '../types/filterRules';
-import {
-  DEFAULT_SETTINGS,
-  CONFIG_VERSION,
-  STORAGE_KEYS
-} from '../types/filterRules';
-import { validateRules } from './ruleValidation';
 import {
   indexedDBStorageManager,
   saveRules as saveRulesToIndexedDB,

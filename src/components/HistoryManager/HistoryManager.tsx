@@ -37,10 +37,8 @@ import {
   ContentCopy,
   Visibility,
   Edit,
-  FilterList,
   History as HistoryIcon,
-  Star,
-  StarBorder
+  Star
 } from '@mui/icons-material';
 import type { HistoryEntry, HistoryQueryOptions, HistoryStats } from '../../types/filterRules';
 import { indexedDBStorageManager } from '../../utils/indexedDBStorage';

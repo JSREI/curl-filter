@@ -1,5 +1,5 @@
 // 存储迁移工具
-import type { FilterRule, StoredConfig } from '../types/filterRules';
+import type { StoredConfig } from '../types/filterRules';
 import { STORAGE_KEYS, CONFIG_VERSION, DEFAULT_SETTINGS } from '../types/filterRules';
 import { indexedDBStorageManager } from './indexedDBStorage';
 import { validateRules } from './ruleValidation';

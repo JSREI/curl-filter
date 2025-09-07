@@ -95,7 +95,7 @@ export class IndexedDBStorageManager {
 
         // 创建备份存储
         if (!db.objectStoreNames.contains(STORES.BACKUP)) {
-          const backupStore = db.createObjectStore(STORES.BACKUP, { keyPath: 'timestamp' });
+          db.createObjectStore(STORES.BACKUP, { keyPath: 'timestamp' });
         }
       };
     });
@@ -502,7 +502,7 @@ export class IndexedDBStorageManager {
 
           if (favoriteOnly) {
             const index = historyStore.index('favorite');
-            request = index.getAll(true);
+            request = index.getAll(1);
           } else {
             request = historyStore.getAll();
           }
@@ -513,7 +513,7 @@ export class IndexedDBStorageManager {
             // 应用过滤条件
             if (searchText) {
               const searchLower = searchText.toLowerCase();
-              results = results.filter(entry =>
+              results = results.filter((entry: HistoryEntry) =>
                 entry.inputCurl.toLowerCase().includes(searchLower) ||
                 entry.outputCurl.toLowerCase().includes(searchLower) ||
                 (entry.title && entry.title.toLowerCase().includes(searchLower))
@@ -521,22 +521,22 @@ export class IndexedDBStorageManager {
             }
 
             if (tags && tags.length > 0) {
-              results = results.filter(entry =>
-                entry.tags && entry.tags.some(tag => tags.includes(tag))
+              results = results.filter((entry: HistoryEntry) =>
+                entry.tags && entry.tags.some((tag: string) => tags.includes(tag))
               );
             }
 
             if (dateRange) {
               const startTime = new Date(dateRange.start).getTime();
               const endTime = new Date(dateRange.end).getTime();
-              results = results.filter(entry => {
+              results = results.filter((entry: HistoryEntry) => {
                 const entryTime = new Date(entry.timestamp).getTime();
                 return entryTime >= startTime && entryTime <= endTime;
               });
             }
 
             // 排序
-            results.sort((a, b) => {
+            results.sort((a: HistoryEntry, b: HistoryEntry) => {
               let aValue: any, bValue: any;
               if (sortBy === 'timestamp') {
                 aValue = new Date(a.timestamp).getTime();
@@ -811,7 +811,7 @@ export class IndexedDBStorageManager {
    */
   async clearStorage(): Promise<void> {
     try {
-      const db = await this.ensureDB();
+      await this.ensureDB();
       const storeNames = [STORES.CONFIG, STORES.RULES, STORES.HISTORY, STORES.BACKUP];
 
       await this.executeTransaction(storeNames, 'readwrite', (stores) => {
