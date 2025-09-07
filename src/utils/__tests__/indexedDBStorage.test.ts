@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 
 // Create a simple test for the saveRules functionality
 describe('IndexedDBStorageManager - Rule Deletion Fix', () => {
@@ -33,7 +33,7 @@ describe('IndexedDBStorageManager - Rule Deletion Fix', () => {
       return result
     }
 
-    const simulateNewBehavior = (existingRules: any[], newRules: any[]) => {
+    const simulateNewBehavior = (_existingRules: any[], newRules: any[]) => {
       // New behavior: clear all, then add new rules
       return [...newRules]
     }

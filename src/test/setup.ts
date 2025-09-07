@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
 // Mock IndexedDB for testing
 const mockIndexedDB = {
@@ -12,7 +13,7 @@ Object.defineProperty(window, 'indexedDB', {
 })
 
 // Mock console methods to reduce noise in tests
-global.console = {
+;(globalThis as any).console = {
   ...console,
   log: vi.fn(),
   debug: vi.fn(),
